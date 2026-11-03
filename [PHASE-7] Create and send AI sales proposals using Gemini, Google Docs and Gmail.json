@@ -1,567 +1,654 @@
-{
-  "name": "[PHASE-7] Create and send AI sales proposals using Gemini, Google Docs and Gmail",
-  "nodes": [
-    {
-      "parameters": {
-        "authentication": "appToken",
-        "email": "={{ $('Loop Over Items').item.json['Email'] }}",
-        "additionalFields": {
-          "companyName": "={{ $('Loop Over Items').item.json['Company Name'] }}",
-          "firstName": "={{ $('Loop Over Items').item.json['Client Name'] }}"
+[
+  {
+    "id": "uwOy1DVRSgnG5Tzt",
+    "name": "[PHASE-7] Create and send AI sales proposals using Gemini, Google Docs and Gmail",
+    "description": null,
+    "active": false,
+    "activeVersionId": null,
+    "createdAt": "2026-10-08T08:59:20.597Z",
+    "updatedAt": "2026-11-03T13:16:30.425Z",
+    "isArchived": false,
+    "versionId": "9c84d3b8-5cec-415c-8e92-4987305580d6",
+    "versionCounter": 118,
+    "sourceWorkflowId": null,
+    "triggerCount": 0,
+    "nodes": [
+      {
+        "parameters": {
+          "authentication": "appToken",
+          "email": "={{ $('Loop Over Items').item.json['Email'] }}",
+          "additionalFields": {
+            "companyName": "={{ $('Loop Over Items').item.json['Company Name'] }}",
+            "firstName": "={{ $('Loop Over Items').item.json['Client Name'] }}"
+          },
+          "options": {}
         },
-        "options": {}
-      },
-      "id": "7a847046-5bba-4df0-a697-276864a0d751",
-      "name": "Create or update a contact",
-      "type": "n8n-nodes-base.hubspot",
-      "position": [
-        832,
-        16
-      ],
-      "typeVersion": 2.2,
-      "retryOnFail": true,
-      "credentials": {
-        "hubspotAppToken": {
-          "id": "8zn83zrAdYVgLba6",
-          "name": "HubSpot Service Key account 2"
-        }
-      },
-      "onError": "continueErrorOutput"
-    },
-    {
-      "parameters": {
-        "operation": "copy",
-        "fileId": {
-          "__rl": true,
-          "value": "1E99wo58wwfOvGmeJ0BLQUO7zbvPq7uYVkUATMwbICXo",
-          "mode": "list",
-          "cachedResultName": "crm run document",
-          "cachedResultUrl": "https://docs.google.com/document/d/1E99wo58wwfOvGmeJ0BLQUO7zbvPq7uYVkUATMwbICXo/edit?usp=drivesdk"
+        "id": "7a847046-5bba-4df0-a697-276864a0d751",
+        "name": "Create or update a contact",
+        "type": "n8n-nodes-base.hubspot",
+        "position": [
+          832,
+          16
+        ],
+        "typeVersion": 2.2,
+        "retryOnFail": true,
+        "credentials": {
+          "hubspotAppToken": {
+            "id": "8zn83zrAdYVgLba6",
+            "name": "HubSpot Service Key account 2"
+          }
         },
-        "name": "=Proposal - {{ $('Loop Over Items').item.json['Company Name'] }}",
-        "options": {}
+        "onError": "continueErrorOutput"
       },
-      "id": "b3366778-9134-4c9d-8120-0094bacd23ad",
-      "name": "Copy file",
-      "type": "n8n-nodes-base.googleDrive",
-      "position": [
-        1056,
-        16
-      ],
-      "typeVersion": 3,
-      "retryOnFail": true,
-      "credentials": {
-        "googleDriveOAuth2Api": {
-          "id": "6EPjCZiY9CZ5pVSd",
-          "name": "Google Drive account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "operation": "update",
-        "documentURL": "={{ $json.id }}",
-        "simple": false,
-        "actionsUi": {
-          "actionFields": [
-            {
-              "action": "replaceAll",
-              "text": "{{Company Name}}",
-              "replaceText": "={{ $('Loop Over Items').item.json['Company Name'] }}",
-              "matchCase": true
-            },
-            {
-              "action": "replaceAll",
-              "text": "{{Client Name}}",
-              "replaceText": "={{ $('Loop Over Items').item.json['Client Name'] }}",
-              "matchCase": true
-            },
-            {
-              "action": "replaceAll",
-              "text": "{{AI_Summary}}",
-              "replaceText": "={{ $('Code in JavaScript2').item.json.AI_Summary }}",
-              "matchCase": true
-            },
-            {
-              "action": "replaceAll",
-              "text": "{{Budget}}",
-              "replaceText": "={{ $('Google Sheets Trigger').item.json.Budget }}",
-              "matchCase": true
-            },
-            {
-              "action": "replaceAll",
-              "text": "{{Date}}",
-              "replaceText": "={{ $today.format('dd-MM-yyyy')}}",
-              "matchCase": true
-            },
-            {
-              "action": "replaceAll",
-              "text": "{{AI_Solution}}",
-              "replaceText": "={{ $('Code in JavaScript2').item.json.AI_Solution }}",
-              "matchCase": true
-            },
-            {
-              "action": "replaceAll",
-              "text": "({{Client Email}})",
-              "replaceText": "={{ $('Google Sheets Trigger').item.json.Email }}",
-              "matchCase": true
-            }
-          ]
-        }
-      },
-      "id": "c187ae62-2508-4002-b888-205589a0e8a7",
-      "name": "Update a document",
-      "type": "n8n-nodes-base.googleDocs",
-      "position": [
-        1280,
-        16
-      ],
-      "typeVersion": 2,
-      "retryOnFail": true,
-      "alwaysOutputData": false,
-      "credentials": {
-        "googleDocsOAuth2Api": {
-          "id": "NznsTSKXfagM85Vg",
-          "name": "Google Docs account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "operation": "download",
-        "fileId": {
-          "__rl": true,
-          "value": "={{ $json.documentId }}",
-          "mode": "id"
+      {
+        "parameters": {
+          "operation": "copy",
+          "fileId": {
+            "__rl": true,
+            "value": "1E99wo58wwfOvGmeJ0BLQUO7zbvPq7uYVkUATMwbICXo",
+            "mode": "list",
+            "cachedResultName": "crm run document",
+            "cachedResultUrl": "https://docs.google.com/document/d/1E99wo58wwfOvGmeJ0BLQUO7zbvPq7uYVkUATMwbICXo/edit?usp=drivesdk"
+          },
+          "name": "=Proposal - {{ $('Loop Over Items').item.json['Company Name'] }}",
+          "options": {}
         },
-        "options": {
-          "googleFileConversion": {
-            "conversion": {
-              "docsToFormat": "application/pdf"
-            }
+        "id": "b3366778-9134-4c9d-8120-0094bacd23ad",
+        "name": "Copy file",
+        "type": "n8n-nodes-base.googleDrive",
+        "position": [
+          1056,
+          16
+        ],
+        "typeVersion": 3,
+        "retryOnFail": true,
+        "credentials": {
+          "googleDriveOAuth2Api": {
+            "id": "6EPjCZiY9CZ5pVSd",
+            "name": "Google Drive account"
           }
         }
       },
-      "id": "152506b1-9d07-4b8d-9c44-68a74fd6100b",
-      "name": "Download file",
-      "type": "n8n-nodes-base.googleDrive",
-      "position": [
-        1504,
-        16
-      ],
-      "typeVersion": 3,
-      "retryOnFail": true,
-      "credentials": {
-        "googleDriveOAuth2Api": {
-          "id": "6EPjCZiY9CZ5pVSd",
-          "name": "Google Drive account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "sendTo": "={{ $('Loop Over Items').item.json['Email'] }}",
-        "subject": "=Proposal for {{ $('Loop Over Items').item.json['Company Name'] }}",
-        "message": "=<!DOCTYPE html> <html> <head> <style> body { font-family: Arial, sans-serif; line-height: 1.6; color: #333333; } .container { padding: 20px; border: 1px solid #eeeeee; border-radius: 5px; } .header { color: #2c3e50; font-size: 18px; font-weight: bold; } .highlight { color: #2980b9; font-weight: bold; } .footer { margin-top: 30px; font-size: 12px; color: #777777; border-top: 1px solid #eeeeee; padding-top: 10px; } </style> </head> <body> <div class=\"container\"> <p>Hi <span class=\"highlight\">{{ $('Loop Over Items').item.json['Client Name'] }}</span>,</p> <p>Thank you for reaching out to <strong>ExeLance IT</strong>. It was a pleasure learning about your goals for <span class=\"highlight\">{{ $('Loop Over Items').item.json['Company Name'] }}</span>.</p> <p>Based on our discussion regarding your <strong>{{ $('Loop Over Items').item.json['Project Goals'] }}</strong>, I have prepared a custom proposal for your review. You can find the detailed breakdown in the attached PDF.</p> <p><strong>What's included in the attachment:</strong></p> <ul> <li>A comprehensive Executive Summary</li> <li>Our tailored Proposed Solution</li> <li>Investment and Timeline details</li> </ul> <p>Please let me know if you have any questions or if you would like to schedule a brief call to discuss the next steps.</p> <p>Best regards,</p> <p><strong>Ritik Mishra</strong><br> AI Automation Engineer | ExeLance IT</p> <div class=\"footer\"> This is an automated delivery of your requested proposal. If you did not request this, please ignore this email. </div> </div> </body> </html>",
-        "options": {
-          "attachmentsUi": {
-            "attachmentsBinary": [
-              {}
+      {
+        "parameters": {
+          "operation": "update",
+          "documentURL": "={{ $json.id }}",
+          "simple": false,
+          "actionsUi": {
+            "actionFields": [
+              {
+                "action": "replaceAll",
+                "text": "{{Company Name}}",
+                "replaceText": "={{ $('Loop Over Items').item.json['Company Name'] }}",
+                "matchCase": true
+              },
+              {
+                "action": "replaceAll",
+                "text": "{{Client Name}}",
+                "replaceText": "={{ $('Loop Over Items').item.json['Client Name'] }}",
+                "matchCase": true
+              },
+              {
+                "action": "replaceAll",
+                "text": "{{AI_Summary}}",
+                "replaceText": "={{ $('Code in JavaScript2').item.json.AI_Summary }}",
+                "matchCase": true
+              },
+              {
+                "action": "replaceAll",
+                "text": "{{Budget}}",
+                "replaceText": "={{ $('Google Sheets Trigger').item.json.Budget }}",
+                "matchCase": true
+              },
+              {
+                "action": "replaceAll",
+                "text": "{{Date}}",
+                "replaceText": "={{ $today.format('dd-MM-yyyy')}}",
+                "matchCase": true
+              },
+              {
+                "action": "replaceAll",
+                "text": "{{AI_Solution}}",
+                "replaceText": "={{ $('Code in JavaScript2').item.json.AI_Solution }}",
+                "matchCase": true
+              },
+              {
+                "action": "replaceAll",
+                "text": "({{Client Email}})",
+                "replaceText": "={{ $('Google Sheets Trigger').item.json.Email }}",
+                "matchCase": true
+              }
             ]
           }
+        },
+        "id": "c187ae62-2508-4002-b888-205589a0e8a7",
+        "name": "Update a document",
+        "type": "n8n-nodes-base.googleDocs",
+        "position": [
+          1280,
+          16
+        ],
+        "typeVersion": 2,
+        "retryOnFail": true,
+        "alwaysOutputData": false,
+        "credentials": {
+          "googleDocsOAuth2Api": {
+            "id": "NznsTSKXfagM85Vg",
+            "name": "Google Docs account"
+          }
         }
       },
-      "id": "dcc46404-503f-4f7b-b5a9-8a02762cd09a",
-      "name": "Send a message",
-      "type": "n8n-nodes-base.gmail",
-      "position": [
-        1728,
-        96
-      ],
-      "webhookId": "YOUR_GMAIL_WEBHOOK_ID",
-      "typeVersion": 2.2,
-      "retryOnFail": true,
-      "credentials": {
-        "gmailOAuth2": {
-          "id": "xcaVl9sDsJ9jEqV4",
-          "name": "Gmail account 2"
+      {
+        "parameters": {
+          "operation": "download",
+          "fileId": {
+            "__rl": true,
+            "value": "={{ $json.documentId }}",
+            "mode": "id"
+          },
+          "options": {
+            "googleFileConversion": {
+              "conversion": {
+                "docsToFormat": "application/pdf"
+              }
+            }
+          }
+        },
+        "id": "152506b1-9d07-4b8d-9c44-68a74fd6100b",
+        "name": "Download file",
+        "type": "n8n-nodes-base.googleDrive",
+        "position": [
+          1504,
+          16
+        ],
+        "typeVersion": 3,
+        "retryOnFail": true,
+        "credentials": {
+          "googleDriveOAuth2Api": {
+            "id": "6EPjCZiY9CZ5pVSd",
+            "name": "Google Drive account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "sendTo": "={{ $('Loop Over Items').item.json['Email'] }}",
+          "subject": "=Proposal for {{ $('Loop Over Items').item.json['Company Name'] }}",
+          "message": "=<!DOCTYPE html> <html> <head> <style> body { font-family: Arial, sans-serif; line-height: 1.6; color: #333333; } .container { padding: 20px; border: 1px solid #eeeeee; border-radius: 5px; } .header { color: #2c3e50; font-size: 18px; font-weight: bold; } .highlight { color: #2980b9; font-weight: bold; } .footer { margin-top: 30px; font-size: 12px; color: #777777; border-top: 1px solid #eeeeee; padding-top: 10px; } </style> </head> <body> <div class=\"container\"> <p>Hi <span class=\"highlight\">{{ $('Loop Over Items').item.json['Client Name'] }}</span>,</p> <p>Thank you for reaching out to <strong>ExeLance IT</strong>. It was a pleasure learning about your goals for <span class=\"highlight\">{{ $('Loop Over Items').item.json['Company Name'] }}</span>.</p> <p>Based on our discussion regarding your <strong>{{ $('Loop Over Items').item.json['Project Goals'] }}</strong>, I have prepared a custom proposal for your review. You can find the detailed breakdown in the attached PDF.</p> <p><strong>What's included in the attachment:</strong></p> <ul> <li>A comprehensive Executive Summary</li> <li>Our tailored Proposed Solution</li> <li>Investment and Timeline details</li> </ul> <p>Please let me know if you have any questions or if you would like to schedule a brief call to discuss the next steps.</p> <p>Best regards,</p> <p><strong>Ritik Mishra</strong><br> AI Automation Engineer | ExeLance IT</p> <div class=\"footer\"> This is an automated delivery of your requested proposal. If you did not request this, please ignore this email. </div> </div> </body> </html>",
+          "options": {
+            "attachmentsUi": {
+              "attachmentsBinary": [
+                {}
+              ]
+            }
+          }
+        },
+        "id": "dcc46404-503f-4f7b-b5a9-8a02762cd09a",
+        "name": "Send a message",
+        "type": "n8n-nodes-base.gmail",
+        "position": [
+          1728,
+          96
+        ],
+        "webhookId": "YOUR_GMAIL_WEBHOOK_ID",
+        "typeVersion": 2.2,
+        "retryOnFail": true,
+        "credentials": {
+          "gmailOAuth2": {
+            "id": "xcaVl9sDsJ9jEqV4",
+            "name": "Gmail account 2"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "pollTimes": {
+            "item": [
+              {
+                "mode": "everyMinute"
+              }
+            ]
+          },
+          "documentId": {
+            "__rl": true,
+            "value": "1GlJ0-kPRe5HjzreASGByz_K_HBerwOK2CzTD7E1k9f4",
+            "mode": "list",
+            "cachedResultName": "Clients",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1GlJ0-kPRe5HjzreASGByz_K_HBerwOK2CzTD7E1k9f4/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "Sheet1",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1GlJ0-kPRe5HjzreASGByz_K_HBerwOK2CzTD7E1k9f4/edit#gid=0"
+          },
+          "event": "rowAdded",
+          "options": {}
+        },
+        "id": "efd4224f-1e12-4eff-bb96-7cae6a0d0bb9",
+        "name": "Google Sheets Trigger",
+        "type": "n8n-nodes-base.googleSheetsTrigger",
+        "position": [
+          -192,
+          96
+        ],
+        "typeVersion": 1,
+        "retryOnFail": true,
+        "credentials": {
+          "googleSheetsTriggerOAuth2Api": {
+            "id": "B0PWsQtMf8wgaZcm",
+            "name": "Google Sheets Trigger account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "options": {}
+        },
+        "id": "8494a6b9-3bbd-4505-ac3c-bee12131a203",
+        "name": "Loop Over Items",
+        "type": "n8n-nodes-base.splitInBatches",
+        "position": [
+          0,
+          0
+        ],
+        "typeVersion": 3
+      },
+      {
+        "parameters": {
+          "jsCode": "// Get the first input item\nconst input = $input.first().json;\n\n// Try to find the AI-generated text\nlet fullText =\n  input.content?.parts?.[0]?.text ||\n  input.content ||\n  input.text ||\n  input.output ||\n  input.response ||\n  \"\";\n\n// Make sure we actually received text\nif (typeof fullText !== \"string\" || !fullText.trim()) {\n  return {\n    AI_Summary: \"No AI summary generated.\",\n    AI_Solution: \"No solution generated.\",\n    Debug: JSON.stringify(input)\n  };\n}\n\n// Split at PROPOSED SOLUTION header\nconst parts = fullText.split(\n  /#{0,6}\\s*PROPOSED SOLUTION\\s*/i\n);\n\nlet summary = parts[0] || \"\";\nlet solution = parts[1] || \"\";\n\n// Remove EXECUTIVE SUMMARY header\nsummary = summary.replace(\n  /#{0,6}\\s*EXECUTIVE SUMMARY\\s*/i,\n  \"\"\n);\n\n// Remove \"Dear [Name],\" introduction\nsummary = summary.replace(\n  /^\\s*Dear\\s+.*?,\\s*/i,\n  \"\"\n);\n\n// Cleanup function\nconst cleanText = (text) => {\n  return text\n    // Remove markdown headers\n    .replace(/^#{1,6}\\s*/gm, \"\")\n\n    // Remove bold and italic markdown\n    .replace(/\\*\\*/g, \"\")\n    .replace(/\\*/g, \"\")\n\n    // Remove horizontal rules\n    .replace(/^\\s*---+\\s*$/gm, \"\")\n\n    // Normalize bullets\n    .replace(/^\\s*[-•]\\s*/gm, \"• \")\n\n    // Remove excessive blank lines\n    .replace(/\\n\\s*\\n\\s*\\n+/g, \"\\n\\n\")\n\n    .trim();\n};\n\nreturn {\n  AI_Summary: cleanText(summary),\n  AI_Solution: solution\n    ? cleanText(solution)\n    : \"No solution generated.\"\n};"
+        },
+        "id": "a281db83-0376-4901-982f-70e77e82627d",
+        "name": "Code in JavaScript2",
+        "type": "n8n-nodes-base.code",
+        "position": [
+          608,
+          16
+        ],
+        "typeVersion": 2
+      },
+      {
+        "parameters": {
+          "model": "nvidia/nemotron-3.5-lightning:free",
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+        "typeVersion": 1,
+        "position": [
+          96,
+          176
+        ],
+        "id": "29fc62b2-83a3-4615-8fbf-7041774fc051",
+        "name": "OpenRouter Chat Model",
+        "credentials": {
+          "openRouterApi": {
+            "id": "u9luvcIofajMncdX",
+            "name": "OpenRouter account 2"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "promptType": "define",
+          "text": "=\"You are a world-class Sales Consultant. Write a professional, persuasive sales proposal based on these details:\n\nClient: {{ $json['Client Name'] }}\n\nCompany: {{ $json['Company Name'] }}\n\nGoals: {{ $json['Project Goals'] }}\n\nBudget: {{ $json['Budget'] }}\n\nStructure your response with two headers:\n\nEXECUTIVE SUMMARY\n(Write a 2-paragraph summary here)\n\nPROPOSED SOLUTION\n(Write 3 bullet points of how we solve their specific goals)\n\nTone: Confident, professional, and helpful.\"",
+          "hasOutputParser": true,
+          "needsFallback": true,
+          "messages": {
+            "messageValues": [
+              {
+                "type": "HumanMessagePromptTemplate",
+                "message": "=\"You are a world-class Sales Consultant. Write a professional, persuasive sales proposal based on these details:  Client: {{ $json['Client Name'] }}  Company: {{ $json['Company Name'] }}  Goals: {{ $json['Project Goals'] }}  Structure your response with two headers:  EXECUTIVE SUMMARY (Write a 2-paragraph summary here)  PROPOSED SOLUTION (Write 3 bullet points of how we solve their specific goals)  Tone: Confident, professional, and helpful.\""
+              }
+            ]
+          },
+          "batching": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.chainLlm",
+        "typeVersion": 1.9,
+        "position": [
+          272,
+          16
+        ],
+        "id": "2a284c77-8022-4bfc-a64a-f3ba77cc19b8",
+        "name": "Basic LLM Chain",
+        "retryOnFail": true,
+        "waitBetweenTries": 1000,
+        "alwaysOutputData": true,
+        "onError": "continueErrorOutput"
+      },
+      {
+        "parameters": {
+          "content": "### This Workflow works when the all client data is entered in Sheets, and then AI prepares the solution and proposal for the client's problem, and the client is added as a contact in our HubSpot, and the  proposal is combined, structured, and sent to the client's Gmail",
+          "height": 112,
+          "width": 608,
+          "color": 7
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          -32,
+          -208
+        ],
+        "typeVersion": 1,
+        "id": "97ac2f1d-d0b2-4e62-af17-0bd19b2b6b91",
+        "name": "Sticky Note3"
+      },
+      {
+        "parameters": {
+          "content": "Using Free LLM might be slow and give rate limit error due to being a free model so retry it ",
+          "height": 96,
+          "color": 5
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          352,
+          176
+        ],
+        "typeVersion": 1,
+        "id": "2cae8e6c-0075-46f7-9ea4-8efc0a3ee2eb",
+        "name": "Sticky Note7"
+      },
+      {
+        "parameters": {
+          "content": "## Hubspot Invite \nhttps://app-na2.hubspot.com/invite-user/CZkrMF9nvSIiMP3l?lang=en&via=link"
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          736,
+          -176
+        ],
+        "typeVersion": 1,
+        "id": "0eef17f6-e67a-4890-83ff-f07d32c021e5",
+        "name": "Sticky Note1"
+      },
+      {
+        "parameters": {
+          "content": "## Drive File\nhttps://docs.google.com/document/d/1E99wo58wwfOvGmeJ0BLQUO7zbvPq7uYVkUATMwbICXo/edit?usp=drivesdk",
+          "width": 224,
+          "color": 2
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          1024,
+          -176
+        ],
+        "typeVersion": 1,
+        "id": "f43447c4-2d3d-44bd-a81c-598f186a62df",
+        "name": "Sticky Note2"
+      },
+      {
+        "parameters": {
+          "content": "## Excel Sheet Link :\n\nhttps://docs.google.com/spreadsheets/d/1GlJ0-kPRe5HjzreASGByz_K_HBerwOK2CzTD7E1k9f4/edit?usp=sharing",
+          "height": 176,
+          "color": 4
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          -368,
+          -112
+        ],
+        "typeVersion": 1,
+        "id": "c3b9ac14-14e4-48f6-9485-96375f78591d",
+        "name": "Sticky Note"
+      },
+      {
+        "parameters": {
+          "select": "user",
+          "user": {
+            "__rl": true,
+            "value": "U0BNE454L5U",
+            "mode": "list",
+            "cachedResultName": "chootu3679452 (@chootu3679)"
+          },
+          "text": "=For Client: {{ $('Google Sheets Trigger').item.json['Client Name'] }}\n\nCompany: {{ $('Google Sheets Trigger').item.json['Company Name'] }}\n\nGoals: {{ $('Google Sheets Trigger').item.json['Project Goals'] }}\n\nBudget: {{ $('Google Sheets Trigger').item.json['Budget'] }}\n\nerror in workflow check manually ",
+          "otherOptions": {}
+        },
+        "type": "n8n-nodes-base.slack",
+        "typeVersion": 2.7,
+        "position": [
+          784,
+          -480
+        ],
+        "id": "235abde3-f5f7-472f-a330-a21dc14b6e64",
+        "name": "Send a message1",
+        "webhookId": "d320068d-854b-4539-a0a0-470a5100d6cc",
+        "retryOnFail": true,
+        "maxTries": 5,
+        "credentials": {
+          "slackApi": {
+            "id": "v2Kwu9AA3YB9U7Uh",
+            "name": "Slack account 2"
+          }
+        },
+        "onError": "continueRegularOutput"
+      },
+      {
+        "parameters": {
+          "model": "nvidia/nemotron-3.5-super-vl:free",
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+        "typeVersion": 1,
+        "position": [
+          224,
+          176
+        ],
+        "id": "934e75f5-4800-4b07-81f8-cd6cea58b4ca",
+        "name": "OpenRouter Chat Model1",
+        "credentials": {
+          "openRouterApi": {
+            "id": "u9luvcIofajMncdX",
+            "name": "OpenRouter account 2"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "resource": "image",
+          "modelId": {
+            "__rl": true,
+            "mode": "list",
+            "value": "models/gemini-3.1-flash-image-preview"
+          },
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.googleGemini",
+        "typeVersion": 1.2,
+        "position": [
+          1232,
+          -448
+        ],
+        "id": "326b2ca9-5a90-4168-88c9-ad049362432c",
+        "name": "Generate an image",
+        "credentials": {
+          "googlePalmApi": {
+            "id": "kwSotjCgam2jhohj",
+            "name": "Google Gemini(PaLM) Api account 2"
+          }
         }
       }
-    },
-    {
-      "parameters": {
-        "pollTimes": {
-          "item": [
+    ],
+    "connections": {
+      "Copy file": {
+        "main": [
+          [
             {
-              "mode": "everyMinute"
+              "node": "Update a document",
+              "type": "main",
+              "index": 0
             }
           ]
-        },
-        "documentId": {
-          "__rl": true,
-          "value": "1GlJ0-kPRe5HjzreASGByz_K_HBerwOK2CzTD7E1k9f4",
-          "mode": "list",
-          "cachedResultName": "Clients",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1GlJ0-kPRe5HjzreASGByz_K_HBerwOK2CzTD7E1k9f4/edit?usp=drivesdk"
-        },
-        "sheetName": {
-          "__rl": true,
-          "value": "gid=0",
-          "mode": "list",
-          "cachedResultName": "Sheet1",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1GlJ0-kPRe5HjzreASGByz_K_HBerwOK2CzTD7E1k9f4/edit#gid=0"
-        },
-        "event": "rowAdded",
-        "options": {}
+        ]
       },
-      "id": "efd4224f-1e12-4eff-bb96-7cae6a0d0bb9",
-      "name": "Google Sheets Trigger",
-      "type": "n8n-nodes-base.googleSheetsTrigger",
-      "position": [
-        -192,
-        96
-      ],
-      "typeVersion": 1,
-      "retryOnFail": true,
-      "credentials": {
-        "googleSheetsTriggerOAuth2Api": {
-          "id": "B0PWsQtMf8wgaZcm",
-          "name": "Google Sheets Trigger account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "options": {}
-      },
-      "id": "8494a6b9-3bbd-4505-ac3c-bee12131a203",
-      "name": "Loop Over Items",
-      "type": "n8n-nodes-base.splitInBatches",
-      "position": [
-        0,
-        0
-      ],
-      "typeVersion": 3
-    },
-    {
-      "parameters": {
-        "jsCode": "// Get the first input item\nconst input = $input.first().json;\n\n// Try to find the AI-generated text\nlet fullText =\n  input.content?.parts?.[0]?.text ||\n  input.content ||\n  input.text ||\n  input.output ||\n  input.response ||\n  \"\";\n\n// Make sure we actually received text\nif (typeof fullText !== \"string\" || !fullText.trim()) {\n  return {\n    AI_Summary: \"No AI summary generated.\",\n    AI_Solution: \"No solution generated.\",\n    Debug: JSON.stringify(input)\n  };\n}\n\n// Split at PROPOSED SOLUTION header\nconst parts = fullText.split(\n  /#{0,6}\\s*PROPOSED SOLUTION\\s*/i\n);\n\nlet summary = parts[0] || \"\";\nlet solution = parts[1] || \"\";\n\n// Remove EXECUTIVE SUMMARY header\nsummary = summary.replace(\n  /#{0,6}\\s*EXECUTIVE SUMMARY\\s*/i,\n  \"\"\n);\n\n// Remove \"Dear [Name],\" introduction\nsummary = summary.replace(\n  /^\\s*Dear\\s+.*?,\\s*/i,\n  \"\"\n);\n\n// Cleanup function\nconst cleanText = (text) => {\n  return text\n    // Remove markdown headers\n    .replace(/^#{1,6}\\s*/gm, \"\")\n\n    // Remove bold and italic markdown\n    .replace(/\\*\\*/g, \"\")\n    .replace(/\\*/g, \"\")\n\n    // Remove horizontal rules\n    .replace(/^\\s*---+\\s*$/gm, \"\")\n\n    // Normalize bullets\n    .replace(/^\\s*[-•]\\s*/gm, \"• \")\n\n    // Remove excessive blank lines\n    .replace(/\\n\\s*\\n\\s*\\n+/g, \"\\n\\n\")\n\n    .trim();\n};\n\nreturn {\n  AI_Summary: cleanText(summary),\n  AI_Solution: solution\n    ? cleanText(solution)\n    : \"No solution generated.\"\n};"
-      },
-      "id": "a281db83-0376-4901-982f-70e77e82627d",
-      "name": "Code in JavaScript2",
-      "type": "n8n-nodes-base.code",
-      "position": [
-        608,
-        16
-      ],
-      "typeVersion": 2
-    },
-    {
-      "parameters": {
-        "model": "nvidia/nemotron-3.5-lightning:free",
-        "options": {}
-      },
-      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
-      "typeVersion": 1,
-      "position": [
-        96,
-        176
-      ],
-      "id": "29fc62b2-83a3-4615-8fbf-7041774fc051",
-      "name": "OpenRouter Chat Model",
-      "credentials": {
-        "openRouterApi": {
-          "id": "u9luvcIofajMncdX",
-          "name": "OpenRouter account 2"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "promptType": "define",
-        "text": "=\"You are a world-class Sales Consultant. Write a professional, persuasive sales proposal based on these details:\n\nClient: {{ $json['Client Name'] }}\n\nCompany: {{ $json['Company Name'] }}\n\nGoals: {{ $json['Project Goals'] }}\n\nBudget: {{ $json['Budget'] }}\n\nStructure your response with two headers:\n\nEXECUTIVE SUMMARY\n(Write a 2-paragraph summary here)\n\nPROPOSED SOLUTION\n(Write 3 bullet points of how we solve their specific goals)\n\nTone: Confident, professional, and helpful.\"",
-        "hasOutputParser": true,
-        "needsFallback": true,
-        "messages": {
-          "messageValues": [
+      "Download file": {
+        "main": [
+          [
             {
-              "type": "HumanMessagePromptTemplate",
-              "message": "=\"You are a world-class Sales Consultant. Write a professional, persuasive sales proposal based on these details:  Client: {{ $json['Client Name'] }}  Company: {{ $json['Company Name'] }}  Goals: {{ $json['Project Goals'] }}  Structure your response with two headers:  EXECUTIVE SUMMARY (Write a 2-paragraph summary here)  PROPOSED SOLUTION (Write 3 bullet points of how we solve their specific goals)  Tone: Confident, professional, and helpful.\""
+              "node": "Send a message",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          []
+        ]
+      },
+      "Send a message": {
+        "main": [
+          [
+            {
+              "node": "Loop Over Items",
+              "type": "main",
+              "index": 0
             }
           ]
+        ]
+      },
+      "Loop Over Items": {
+        "main": [
+          [],
+          [
+            {
+              "node": "Basic LLM Chain",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Update a document": {
+        "main": [
+          [
+            {
+              "node": "Download file",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code in JavaScript2": {
+        "main": [
+          [
+            {
+              "node": "Create or update a contact",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Google Sheets Trigger": {
+        "main": [
+          [
+            {
+              "node": "Loop Over Items",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Create or update a contact": {
+        "main": [
+          [
+            {
+              "node": "Copy file",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Send a message1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "OpenRouter Chat Model": {
+        "ai_languageModel": [
+          [
+            {
+              "node": "Basic LLM Chain",
+              "type": "ai_languageModel",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Basic LLM Chain": {
+        "main": [
+          [
+            {
+              "node": "Code in JavaScript2",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Send a message1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Send a message1": {
+        "main": [
+          [
+            {
+              "node": "Loop Over Items",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "OpenRouter Chat Model1": {
+        "ai_languageModel": [
+          [
+            {
+              "node": "Basic LLM Chain",
+              "type": "ai_languageModel",
+              "index": 1
+            }
+          ]
+        ]
+      }
+    },
+    "nodeGroups": [],
+    "settings": {
+      "executionOrder": "v1",
+      "binaryMode": "separate"
+    },
+    "staticData": null,
+    "pinData": {},
+    "meta": {
+      "templateCredsSetupCompleted": true
+    },
+    "tags": [],
+    "shared": [
+      {
+        "role": "workflow:owner",
+        "workflowId": "uwOy1DVRSgnG5Tzt",
+        "projectId": "3JNuXTT2Ijv268WX",
+        "project": {
+          "id": "3JNuXTT2Ijv268WX",
+          "name": "Ritik Mishra <ritik.mishra@team.exelanceit.in>",
+          "type": "personal",
+          "icon": null,
+          "description": null,
+          "customTelemetryTags": [],
+          "creatorId": "6b73d3d8-fb6a-4a4d-aeaa-04f1f346e9ed",
+          "createdAt": "2026-10-07T08:27:24.286Z",
+          "updatedAt": "2026-10-07T08:29:08.126Z"
         },
-        "batching": {}
-      },
-      "type": "@n8n/n8n-nodes-langchain.chainLlm",
-      "typeVersion": 1.9,
-      "position": [
-        272,
-        16
-      ],
-      "id": "2a284c77-8022-4bfc-a64a-f3ba77cc19b8",
-      "name": "Basic LLM Chain",
-      "retryOnFail": true,
-      "waitBetweenTries": 1000,
-      "alwaysOutputData": true,
-      "onError": "continueErrorOutput"
-    },
-    {
-      "parameters": {
-        "content": "### This Workflow works when the all client data is entered in Sheets, and then AI prepares the solution and proposal for the client's problem, and the client is added as a contact in our HubSpot, and the  proposal is combined, structured, and sent to the client's Gmail",
-        "height": 112,
-        "width": 608,
-        "color": 7
-      },
-      "type": "n8n-nodes-base.stickyNote",
-      "position": [
-        -32,
-        -208
-      ],
-      "typeVersion": 1,
-      "id": "97ac2f1d-d0b2-4e62-af17-0bd19b2b6b91",
-      "name": "Sticky Note3"
-    },
-    {
-      "parameters": {
-        "content": "Using Free LLM might be slow and give rate limit error due to being a free model so retry it ",
-        "height": 96,
-        "color": 5
-      },
-      "type": "n8n-nodes-base.stickyNote",
-      "position": [
-        352,
-        176
-      ],
-      "typeVersion": 1,
-      "id": "2cae8e6c-0075-46f7-9ea4-8efc0a3ee2eb",
-      "name": "Sticky Note7"
-    },
-    {
-      "parameters": {
-        "content": "## Hubspot Invite \nhttps://app-na2.hubspot.com/invite-user/CZkrMF9nvSIiMP3l?lang=en&via=link"
-      },
-      "type": "n8n-nodes-base.stickyNote",
-      "position": [
-        736,
-        -176
-      ],
-      "typeVersion": 1,
-      "id": "0eef17f6-e67a-4890-83ff-f07d32c021e5",
-      "name": "Sticky Note1"
-    },
-    {
-      "parameters": {
-        "content": "## Drive File\nhttps://docs.google.com/document/d/1E99wo58wwfOvGmeJ0BLQUO7zbvPq7uYVkUATMwbICXo/edit?usp=drivesdk",
-        "width": 224,
-        "color": 2
-      },
-      "type": "n8n-nodes-base.stickyNote",
-      "position": [
-        1024,
-        -176
-      ],
-      "typeVersion": 1,
-      "id": "f43447c4-2d3d-44bd-a81c-598f186a62df",
-      "name": "Sticky Note2"
-    },
-    {
-      "parameters": {
-        "content": "## Excel Sheet Link :\n\nhttps://docs.google.com/spreadsheets/d/1GlJ0-kPRe5HjzreASGByz_K_HBerwOK2CzTD7E1k9f4/edit?usp=sharing",
-        "height": 176,
-        "color": 4
-      },
-      "type": "n8n-nodes-base.stickyNote",
-      "position": [
-        -368,
-        -112
-      ],
-      "typeVersion": 1,
-      "id": "c3b9ac14-14e4-48f6-9485-96375f78591d",
-      "name": "Sticky Note"
-    },
-    {
-      "parameters": {
-        "select": "user",
-        "user": {
-          "__rl": true,
-          "value": "U0BNE454L5U",
-          "mode": "list",
-          "cachedResultName": "chootu3679452 (@chootu3679)"
-        },
-        "text": "=For Client: {{ $('Google Sheets Trigger').item.json['Client Name'] }}\n\nCompany: {{ $('Google Sheets Trigger').item.json['Company Name'] }}\n\nGoals: {{ $('Google Sheets Trigger').item.json['Project Goals'] }}\n\nBudget: {{ $('Google Sheets Trigger').item.json['Budget'] }}\n\nerror in workflow check manually ",
-        "otherOptions": {}
-      },
-      "type": "n8n-nodes-base.slack",
-      "typeVersion": 2.7,
-      "position": [
-        784,
-        -480
-      ],
-      "id": "235abde3-f5f7-472f-a330-a21dc14b6e64",
-      "name": "Send a message1",
-      "webhookId": "d320068d-854b-4539-a0a0-470a5100d6cc",
-      "retryOnFail": true,
-      "maxTries": 5,
-      "credentials": {
-        "slackApi": {
-          "id": "v2Kwu9AA3YB9U7Uh",
-          "name": "Slack account 2"
-        }
-      },
-      "onError": "continueRegularOutput"
-    }
-  ],
-  "pinData": {},
-  "connections": {
-    "Copy file": {
-      "main": [
-        [
-          {
-            "node": "Update a document",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Download file": {
-      "main": [
-        [
-          {
-            "node": "Send a message",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        []
-      ]
-    },
-    "Send a message": {
-      "main": [
-        [
-          {
-            "node": "Loop Over Items",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Loop Over Items": {
-      "main": [
-        [],
-        [
-          {
-            "node": "Basic LLM Chain",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Update a document": {
-      "main": [
-        [
-          {
-            "node": "Download file",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Code in JavaScript2": {
-      "main": [
-        [
-          {
-            "node": "Create or update a contact",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Google Sheets Trigger": {
-      "main": [
-        [
-          {
-            "node": "Loop Over Items",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Create or update a contact": {
-      "main": [
-        [
-          {
-            "node": "Copy file",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Send a message1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "OpenRouter Chat Model": {
-      "ai_languageModel": [
-        [
-          {
-            "node": "Basic LLM Chain",
-            "type": "ai_languageModel",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Basic LLM Chain": {
-      "main": [
-        [
-          {
-            "node": "Code in JavaScript2",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Send a message1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Send a message1": {
-      "main": [
-        [
-          {
-            "node": "Loop Over Items",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    }
-  },
-  "active": false,
-  "settings": {
-    "executionOrder": "v1",
-    "binaryMode": "separate"
-  },
-  "versionId": "7108438a-af5f-47b1-8a5f-03aa78fffb94",
-  "meta": {
-    "templateCredsSetupCompleted": true,
-    "instanceId": "51aaabdebef03de11ed077a039134b3373a857e86a0bc5cd146558fd60bd7e1a"
-  },
-  "nodeGroups": [],
-  "id": "uwOy1DVRSgnG5Tzt",
-  "tags": []
-}
+        "createdAt": "2026-10-08T08:59:20.597Z",
+        "updatedAt": "2026-10-08T08:59:20.597Z"
+      }
+    ],
+    "activeVersion": null
+  }
+]
